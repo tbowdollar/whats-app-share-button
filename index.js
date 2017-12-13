@@ -7,7 +7,7 @@ function _init_() {
   var url = 'http://www.ebay.com/rps/feed/v1.1/ebay-au';
   var wrapper = `<div class="container flex"></div>`;
   var os = {
-    ios: navigator.userAgent.match(/iPhone|ipad|iPod/i),
+    ios: navigator.userAgent.match(/iPhone|iPad|iPod/i),
     android: navigator.userAgent.match(/Android/i),
     mac: navigator.userAgent.match(/Macintosh/i)
   }
