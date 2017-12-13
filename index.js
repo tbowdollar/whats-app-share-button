@@ -3,12 +3,21 @@ function _init_() {
   console.log('---> START');
   var root = document.getElementById('root');
   var container = document.getElementsByClassName('container')[0];
-  var url = 'http://localhost:3001/api/campaigns';
+  //var url = 'http://localhost:3001/api/campaigns';
+  var url = 'http://www.ebay.com/rps/feed/v1.1/ebay-au';
   var wrapper = `<div class="container flex"></div>`;
+  var os = {
+    ios: navigator.userAgent.match(/iPhone|ipad|iPod/i),
+    android: navigator.userAgent.match(/Android/i),
+    mac: navigator.userAgent.match(/Macintosh/i)
+  }
   var btn = function(btnurl) {
+    if(os.ios || os.android || os.mac) {
     return `<div><a href="${btnurl}">Share on whats app</a></div>`;
+    }
+    return '';
   };
-  var template = function(props) {
+  var item = function(props) {
     return `<div id="item"><div class="image"><a href="${props.url}"><img src="${props.imageurl}" /></a></div><div class="info">${props.title}<br/><br/>${props.price}<br /><br/>${props.btn}</div></div>`;
   }
 
@@ -19,12 +28,13 @@ function _init_() {
         return false
       }
       var req = new XMLHttpRequest();
-      req.responseType = 'JSON';
-      req.overrideMimeType('application/json');
+      //req.responseType = 'JSON';
+      //req.overrideMimeType('application/json');
       req.open('GET', url, true);
       req.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) {
-        var res = JSON.parse(req.response);
+        //var res = JSON.parse(req.response);
+        var res = req.responseXML;
         next(res);
       }
     };
@@ -36,25 +46,28 @@ function _init_() {
     elements.parent.insertAdjacentHTML('afterbegin',elements.child);
   }
 
-  var fetch = new Fetch_it();
-  fetch.get(url, function(res) {
-    console.log('---> RESPONSE');
-    for (var i = 0; i < res.length; i++) {
-      var btnurl = '';
+  function handleResponse(res) {
+    for (var i = 0; i < 4; i++) {
+      var btnurl = 'whatsapp://' + res.getElementsByTagName('url')[i].textContent;
       var props = {
-        url: 1,
-        imageurl: 1,
-        title: res[i]['campaignName'],
-        price: 1,
+        url: res.getElementsByTagName('url')[i].textContent,
+        imageurl: res.getElementsByTagName('image225')[i].textContent,
+        title: res.getElementsByTagName('title')[i].textContent,
+        price: res.getElementsByTagName('price')[i].textContent,
         btn: btn(btnurl)
       };
       var elements = {
         parent: root,
-        child: template(props)
+        child: item(props)
       };
       render(elements);
     }
+  }
 
+  var fetch = new Fetch_it();
+
+  fetch.get(url, function(res) {
+    handleResponse(res);
   });
 }
 window.addEventListener('load', function() {
