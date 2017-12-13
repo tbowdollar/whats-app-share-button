@@ -12,7 +12,7 @@ function _init_() {
     mac: navigator.userAgent.match(/Macintosh/i)
   }
   var btn = function(btnurl) {
-    if(os.ios || os.android || os.mac) {
+    if(os.ios || os.android) {
     return `<div><a href="${btnurl}">Share on whats app</a></div>`;
     }
     return `<div><a href="${btnurl}">Buy Now &rarr;</a></div>`;;
@@ -49,7 +49,7 @@ function _init_() {
   function handleResponse(res) {
     for (var i = 0; i < 4; i++) {
       var btnurl = res.getElementsByTagName('url')[i].textContent;
-      if(os.ios || os.android || os.mac) {
+      if(os.ios || os.android) {
         btnurl = 'whatsapp://send?text=' + res.getElementsByTagName('url')[i].textContent;
       }
       var props = {
