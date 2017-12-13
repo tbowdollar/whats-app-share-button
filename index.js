@@ -15,10 +15,10 @@ function _init_() {
     if(os.ios || os.android || os.mac) {
     return `<div><a href="${btnurl}">Share on whats app</a></div>`;
     }
-    return '';
+    return `<div><a href="${btnurl}">Buy Now &rarr;</a></div>`;;
   };
   var item = function(props) {
-    return `<div id="item"><div class="image"><a href="${props.url}"><img src="${props.imageurl}" /></a></div><div class="info">${props.title}<br/><br/>${props.price}<br /><br/>${props.btn}</div></div>`;
+    return `<div class="item"><div class="image"><a href="${props.url}"><img src="${props.imageurl}" /></a></div><div class="info">${props.title}<br/><br/>${props.price}<br /><br/>${props.btn}</div></div>`;
   }
 
   function Fetch_it() {
@@ -48,7 +48,10 @@ function _init_() {
 
   function handleResponse(res) {
     for (var i = 0; i < 4; i++) {
-      var btnurl = 'whatsapp://' + res.getElementsByTagName('url')[i].textContent;
+      var btnurl = res.getElementsByTagName('url')[i].textContent;
+      if(os.ios || os.android || os.mac) {
+        btnurl = 'whatsapp://send?text=' + res.getElementsByTagName('url')[i].textContent;
+      }
       var props = {
         url: res.getElementsByTagName('url')[i].textContent,
         imageurl: res.getElementsByTagName('image225')[i].textContent,
