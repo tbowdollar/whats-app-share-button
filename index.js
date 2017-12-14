@@ -10,7 +10,7 @@ function _init_() {
     ios: navigator.userAgent.match(/iPhone|iPad|iPod/i),
     android: navigator.userAgent.match(/Android/i),
     mac: navigator.userAgent.match(/Macintosh/i),
-	ms: navigator.userAgent(/Windows/i)
+	ms: navigator.userAgent.match(/Windows/i)
   };
   var btn = function(btnurl) {
     if(os.ios || os.android || os.mac || os.ms) {
